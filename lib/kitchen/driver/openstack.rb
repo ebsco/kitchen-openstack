@@ -431,6 +431,12 @@ module Kitchen
       def wait_for_server(server, state)
         wait_for_server_console(server) if config[:console_log_expression]
 
+        # Do this still in case we need to wait after a specific console line
+        if config[:server_wait]
+          info "Sleeping for #{config[:server_wait]} seconds to let your server to start up..." # rubocop:disable Metrics/LineLength
+          countdown(config[:server_wait])
+        end
+
         info 'Waiting for server to be ready...'
         instance.transport.connection(state).wait_until_ready
       rescue

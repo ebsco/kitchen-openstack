@@ -164,6 +164,19 @@ connections you want declare this.
 ### glance\_cache\_wait\_timeout
 When OpenStack downloads the image into cache, it takes extra time to provision.  Timeout controls maximum amount of time to wait for machine to move from the Build/Spawn phase to Active.
 
+### server\_wait
+
+`server_wait` is a workaround to deal with how some VMs with `cloud-init`.
+Some clouds need this some, most OpenStack instances don't. This is a stop gap
+wait makes sure that the machine is in a good state to work with. Ideally the
+transport layer in Test-Kitchen will have a more intelligent way to deal with this.
+There will be a dot that appears every 10 seconds as the timer counts down.
+You may want to add this for **WinRM** instances due to the multiple restarts that
+happen on creation and boot. A good default is `300` seconds to make sure it's
+in a good state.
+
+The default is `0`.
+
 ### console\_log\_expression
 
 Allows for VMs to execute `cloud-init` or log to the instance console
