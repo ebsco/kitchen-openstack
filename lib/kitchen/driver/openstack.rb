@@ -392,11 +392,10 @@ module Kitchen
                            config[:username],
                            password: config[:password] || server.password)
         pub_key = open(config[:public_key_path]).read
-        ssh.run([
-          %(mkdir .ssh),
-          %(echo "#{pub_key}" >> ~/.ssh/authorized_keys),
-          %(passwd -l #{config[:username]})
-        ])
+        ssh.run([%(mkdir .ssh),
+                 %(echo "#{pub_key}" >> ~/.ssh/authorized_keys),
+                 %(passwd -l #{config[:username]})
+                ])
       end
 
       def disable_ssl_validation
@@ -415,7 +414,7 @@ module Kitchen
         matched = false
         while x < timeout
           matches = get_server_log(server).scan(/#{expression}/).size
-          if (matches >= config[:console_log_match_count])
+          if matches >= config[:console_log_match_count]
             info 'Found console log line based on regular expression'
             matched = true
             break

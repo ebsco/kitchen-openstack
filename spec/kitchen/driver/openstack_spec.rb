@@ -741,7 +741,7 @@ describe Kitchen::Driver::Openstack do
       let(:hostname) { 'ab.c' * 20 }
 
       it 'limits the generated name to 63 characters' do
-        expect(driver.send(:default_name).length).to be <= (63)
+        expect(driver.send(:default_name).length).to be <= 63
       end
     end
 
@@ -799,7 +799,7 @@ describe Kitchen::Driver::Openstack do
 
       it 'limits the generated name to 63 characters' do
         expect(driver.send(:server_name_prefix, long_prefix).length)
-          .to be <= (63)
+          .to be <= 63
       end
     end
 
@@ -1172,11 +1172,14 @@ describe Kitchen::Driver::Openstack do
       expect(Fog::SSH).to receive(:new).with(state[:hostname],
                                              'root',
                                              password: 'aloha').and_return(ssh)
-      expect(ssh).to receive(:run).with([
-        'mkdir .ssh',
-        'echo "a_key" >> ~/.ssh/authorized_keys',
-        'passwd -l root'
-      ])
+
+      expect(ssh).to receive(:run)
+        .with(
+          [
+            'mkdir .ssh',
+            'echo "a_key" >> ~/.ssh/authorized_keys',
+            'passwd -l root'
+          ])
       driver.send(:do_ssh_setup, state, config, server)
     end
 
