@@ -118,8 +118,15 @@ If a `key_name` is provided it will be used instead of any
 If a `key_name` is provided without any `private_key_path`, unexpected
 behavior may result if your local RSA/DSA private key doesn't match that
 OpenStack key. If you do key injection via `cloud-init` like this issue:
-[#77](https://github.com/test-kitchen/kitchen-openstack/issues/77) the best
-way is to make a "dummy-key."
+[#77](https://github.com/test-kitchen/kitchen-openstack/issues/77). The
+`key_name` should be a blank string if you need to skip it. Example:
+
+```yml
+driver:
+  [-- snip --]
+  key_name: ""
+  user_data: cloud_init
+```
 
 ### username
 
@@ -169,6 +176,32 @@ happen on creation and boot. A good default is `300` seconds to make sure it's
 in a good state.
 
 The default is `0`.
+
+### console\_log\_expression
+
+Allows for VMs to execute `cloud-init` or log to the instance console
+and not falsely detect the VM as up.  Setting this expression to a regular
+expression will block the transport logic until a certain log message
+is written.  This allows `cloud-init` to execute any arbitrary script
+and wait for it to finish.
+
+The default is `nil`, which is disabled.
+
+### console\_log\_match\_count
+
+How many times to look for `console_log_expression` inside the log.  If
+the script is sent in via userdata, the line may show as userdata is
+printed once when the script is sent over, and another when executed.
+
+The default is 1
+
+### console\_log\_wait\_timeout
+
+If the `console_log_expression` is defined, how long to wait for the log
+messages to show up.  This value is in seconds and is only activated if
+`console_log_expression` parameter is defined
+
+The default is 600
 
 ### security\_groups
 
